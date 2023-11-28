@@ -96,3 +96,24 @@ export const getProduct = async (req: Request, res: Response) => {
     }
 
 }
+
+export const addProducts = async (req: Request, res: Response) => {
+    try {
+      const product1 = new Products();
+      product1.firstname = 'Producto 1';
+      product1.Price = 10.99;
+      product1.img = 'imagen1.jpg';
+      await product1.save();
+  
+      const product2 = new Products();
+      product2.firstname = 'Producto 2';
+      product2.Price = 19.99;
+      product2.img = 'imagen2.jpg';
+      await product2.save();
+  
+      return res.status(201).json({ message: 'Productos agregados exitosamente' });
+    } catch (error) {
+      console.error('Error al agregar productos:', error);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  };

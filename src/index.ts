@@ -1,6 +1,9 @@
 import "reflect-metadata";
 import app from './app';
 import { AppDataSource } from './db';
+import productsRoutes from './routes/products.routes';
+
+app.use('/api', productsRoutes);
 
 async function main() {
     try {
