@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity } from 'typeorm';
 
 @Entity()
-export class Products extends BaseEntity {
+export class Products {
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -26,4 +26,9 @@ export class Products extends BaseEntity {
     @UpdateDateColumn()
     updated: Date;
 
+    constructor(firstname:string, Price:number, img: string){
+        this.firstname = firstname;
+        this.Price = Price;
+        this.img = img;
+    }
 }

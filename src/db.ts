@@ -1,6 +1,8 @@
 import { DataSource } from 'typeorm';
 import { User } from './entities/User';
 import { Products } from './entities/Products';
+import { createConnection } from "typeorm";
+import "reflect-metadata";
 
 export const AppDataSource = new DataSource({
     type: 'mysql',
@@ -13,3 +15,4 @@ export const AppDataSource = new DataSource({
     logging: true,
     synchronize: true,
 })
+    

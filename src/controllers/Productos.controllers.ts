@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import {Products} from "../entities/Products"
+import { AppDataSource } from '../db';
 
 export const createProducts = async (req: Request, res: Response) => {
     
@@ -7,12 +8,9 @@ export const createProducts = async (req: Request, res: Response) => {
 
     try {
 
-        const prod = new Products();
-        prod.firstname = firstname;
-        prod.Price = Price;
-        prod.img = img;
+        const prod = new Products(firstname,Price,img);
 
-        await prod.save();
+        await AppDataSource.manager.save(prod);
 
         return res.json(prod);
     } catch (error) {
@@ -28,7 +26,8 @@ export const createProducts = async (req: Request, res: Response) => {
 export const getProducts = async (req: Request, res: Response) => {
 
     try {
-        const prod = await Products.find();
+        const repo = AppDataSource.manager.getRepository(Products)
+        const prod = await repo.find();
         return res.json(prod);
     } catch (error) {
         if (error instanceof Error) {
@@ -41,12 +40,13 @@ export const updateProducts = async (req: Request, res: Response) => {
 
     try {
         const { id } = req.params;
-
-        const prod = await Products.findOneBy({ id: parseInt(req.params.id) });
+        
+        const repo = AppDataSource.manager.getRepository(Products)
+        const prod = await repo.findOneBy({ id: parseInt(req.params.id) });
 
         if (!prod) return res.status(404).json({ message: 'prod does not exist' });
 
-        await Products.update({ id: parseInt(id) }, req.body);
+        await repo.update({ id: parseInt(id) }, req.body);
 
         return res.sendStatus(204);
 
@@ -64,7 +64,8 @@ export const deleteProducts = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        const result = await Products.delete({ id: parseInt(id) });
+        const repo = AppDataSource.manager.getRepository(Products)
+        const result = await repo.delete({ id: parseInt(id) });
 
         if (result.affected === 0) {
             return res.status(400).json({ message: 'User not found' });
@@ -85,7 +86,8 @@ export const getProduct = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        const prod = await Products.findOneBy({ id: parseInt(id) });
+        const repo = AppDataSource.manager.getRepository(Products)
+        const prod = await repo.findOneBy({ id: parseInt(id) });
 
         return res.json(prod);
 
@@ -97,24 +99,3 @@ export const getProduct = async (req: Request, res: Response) => {
     }
 
 }
-
-export const addProducts = async (req: Request, res: Response) => {
-    try {
-      const product1 = new Products();
-      product1.firstname = 'Producto 1';
-      product1.Price = 10.99;
-      product1.img = 'imagen1.jpg';
-      await product1.save();
-  
-      const product2 = new Products();
-      product2.firstname = 'Producto 2';
-      product2.Price = 19.99;
-      product2.img = 'imagen2.jpg';
-      await product2.save();
-  
-      return res.status(201).json({ message: 'Productos agregados exitosamente' });
-    } catch (error) {
-      console.error('Error al agregar productos:', error);
-      return res.status(500).json({ error: 'Error interno del servidor' });
-    }
-  };
