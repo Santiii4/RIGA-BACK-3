@@ -2,9 +2,10 @@ import { Request, Response } from 'express';
 import {Products} from "../entities/Products"
 
 export const createProducts = async (req: Request, res: Response) => {
+    
+    const { firstname, Price, img } = req.body;
 
     try {
-        const { firstname, Price, img } = req.body;
 
         const prod = new Products();
         prod.firstname = firstname;
